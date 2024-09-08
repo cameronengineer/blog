@@ -10,7 +10,6 @@ name = "LinkedIn"
 icon = "LinkedIn"
 url = "https://www.linkedin.com/in/cameronengineer/"
 
-
 [[params.social]]
 name = "GitHub"
 icon = "GitHub"
