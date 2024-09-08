@@ -4,15 +4,16 @@ title = 'Camerons Notes'
 theme="archie"
 
 [params]
+	mode="auto"
 
 [[params.social]]
 name = "LinkedIn"
-icon = "LinkedIn"
+icon = "linkedin"
 url = "https://www.linkedin.com/in/cameronengineer/"
 
 [[params.social]]
 name = "GitHub"
-icon = "GitHub"
+icon = "github"
 url  = "https://github.com/cameronengineer"
 
 [[menu.main]]
