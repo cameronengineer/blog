@@ -5,6 +5,7 @@ on:
     branches:
       - main  # Set a branch to deploy
   pull_request:
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -14,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          submodules: true  # Fetch Hugo themes (true OR recursive)
+          submodules: false  # Fetch Hugo themes (true OR recursive)
           fetch-depth: 0    # Fetch all history for .GitInfo and .Lastmod
 
       - name: Setup Hugo
