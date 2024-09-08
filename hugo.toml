@@ -1,3 +1,36 @@
-baseURL = 'https://example.org/'
+baseURL = 'blog.cameronengineer.com'
 languageCode = 'en-us'
-title = 'My New Hugo Site'
+title = 'Camerons Notes'
+theme="archie"
+
+[params]
+
+[[params.social]]
+name = "LinkedIn"
+icon = "LinkedIn"
+url = "https://www.linkedin.com/in/cameronengineer/"
+
+
+[[params.social]]
+name = "GitHub"
+icon = "GitHub"
+url  = "https://github.com/cameronengineer"
+
+[[menu.main]]
+name = "Home"
+url = "/"
+weight = 1
+
+
+[[menu.main]]
+name = "Flying"
+url = "/tags/Flying"
+weight = 2
+
+
+[[menu.main]]
+name = "Engineering"
+url = "/tags/Engineering"
+weight = 2
+
+
