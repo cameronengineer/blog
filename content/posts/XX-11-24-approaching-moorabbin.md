@@ -1,9 +1,8 @@
 ---
 title: Approaching At Moorabbin Airport YMMB
 description: Notes About Landing At Moorabbin Airport
-draft: true
-date: "2024-10-25"
-lastmod: 2024-10-25"
+draft: false
+date: "2024-11-25"
 tags:
   - flying
 toc: true

@@ -3,18 +3,18 @@ title: What technology skills result in the highest compensation?
 description: Analysis of 2024 Stack Overflow Developer Survey data.
 tldr: Learn Cloud, Kuberneties and AWS skills.
 draft: false
-date: "2024-10-26"
-lastmod: 2024-10-26"
+date: "2024-10-25"
+lastmod: 2024-10-25"
 tags:
   - engineering
-toc: false
+toc: true
 ---
 
 ## Method
 
 I've got a particular interest in professional skill development. Soft skills are timeless and an area that should always be worked on. Whats less timeless are technology skills; with the technology landscape rapidly evolving, practitioners must continuously review and develop their skills to stay competitive.
 
-To find out some of the skills worth focusing on, I have undertaken an analysis of the 2024 Stack Overflow Developer Survey dataset. This dataset is built from anonymous volunteered survey results covering the respondents' education, total compensation, and use of programming languages and frameworks.
+To discover out some of the skills worth focusing on, I have undertaken an analysis of the 2024 Stack Overflow Developer Survey dataset. This dataset is built from anonymous volunteered survey results covering the respondents' education, total compensation, years of experiance, and use of programming languages and frameworks.
 
 A partial correlation was conducted to explore the relationship between these factors and compensation. The output of the correlational analysis provided a correlation for each factor, with only factors with p-values above 0.05 being considered statistically significant.
 
@@ -43,13 +43,13 @@ After filtering, the country's with the most respondents where US, Germany and t
 
 Many of the factors where not statically significant as shown below. Only the most strongly correlated factors where strong enough to be statistically significant.
 
-![](/images/25-10-24-github-servey-salary/factors_and_p_value.png)
+![](/images/26-10-24-github-servey-salary/factors_and_p_value.png)
 
 Its also important to note that many factors were only statistically significant in a particular region. The smaller datasets, especially Australia, had less statistically significant correlations than the US.
 
-![](/images/25-10-24-github-servey-salary/regionalpvalue.png)
+![](/images/26-10-24-github-servey-salary/regionalpvalue.png)
 
-## Resaults
+## Results
 
 So firstly, here are some factors which where statistically significant in all countries. In the below table, look at the r values, this is the correlation with reported total compensation. 
 
@@ -118,12 +118,12 @@ Lets JUST look at the strong positive correlations (greater than 0.1) which exis
 |   **LanguageHaveWorkedWith_Solidity**  | 0.002644  | 0.051130  | 0.007171  | 0.111174 | 0.043030  |
 | **LanguageHaveWorkedWith_Objective-C** | -0.042947 | -0.020378 | 0.058743  | 0.127747 | 0.030791  |
 
+## Conclusion
+
 So when looking at the positive strong correlations for each country, we can see that AWS skills are strongly correlate with compensation; this further confirms my belief that DevOps and Cloud skills are key. 
 
 UK and Germany have strong correlations with education level, particularly the masters level education. Correlation is not causation, and in my experience, masters degree's are often done after many years of professional experience. We could be seeing years of experience being the causation, and the masters degree being dragged along for the ride. Or maybe a masters degree is independently strongly correlated; further analysis is needed.
 
 This analysis use of self-reported data which introduces the possibility of inaccuracies or exaggerations. The correlations did not control for other factors, even those within the same dataset. Correlations do not necessarily infer causation. The pool of survey recipients are primarily software developers; so these results should not be projected onto other technology fields such as platform or network engineering.
 
-## Run The Jupityer Notebook Yourself
-
-[Find linked the Juypter notebook used for this analysis.](/25-10-24-github-servey-salary/25-10-24-github-survey-salary.ipynb) 
+[Find linked the Juypter notebook used for this analysis.](/26-10-24-github-servey-salary/25-10-24-github-survey-salary.ipynb) 
