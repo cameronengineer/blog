@@ -131,5 +131,5 @@ It seems that to earn the big bucks, focus on;
 - gaining years of experience,
 - use modern cloud tools such as AWS, Kubernetes and Containers,
 - use Homebrew on a Mac,
-- learn Golang and C++,
+- learn Golang,
 - work with Apache Kafka.
