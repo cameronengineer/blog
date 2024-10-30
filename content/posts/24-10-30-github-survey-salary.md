@@ -4,7 +4,7 @@ description: Analysis of 2024 Stack Overflow Developer Survey data.
 tldr: Learn Cloud, Kuberneties and AWS skills.
 draft: false
 date: 2024-10-30
-lastmod: 2024-10-30"
+lastmod: 2024-10-30
 tags:
   - engineering
 toc: true
