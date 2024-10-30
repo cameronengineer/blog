@@ -1,12 +1,14 @@
 ---
 title: Approaching At Moorabbin Airport YMMB
-description: Notes About Landing At Moorabbin Airport 
-draft: false 
-tags: [flying, engineering] 
+description: Notes About Landing At Moorabbin Airport
+draft: false
+date: "2024-11-25"
+tags:
+  - flying
 toc: true
 ---
 
-> You should rely on your flight intructor, not the personal notes of some guy on the internet, for navigating the Moorabbin airspace.
+> You should rely on your flight instructor, not the personal notes of some guy on the internet, for navigating the Moorabbin airspace.
 
 ## Before the VFR 
 
