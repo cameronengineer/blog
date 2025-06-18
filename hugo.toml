@@ -1,6 +1,6 @@
 baseURL = 'blog.cameronengineer.com'
 languageCode = 'en-us'
-title = 'Camerons Notes'
+title = "Camerons Note's"
 theme = ["osm", "archie"]
 
 [module]
@@ -38,3 +38,6 @@ url = "/tags/Engineering"
 weight = 3
 
 
+[services]
+  [services.googleAnalytics]
+    id = 'G-MSXT4PVT9B'
