@@ -1,7 +1,7 @@
 baseURL = 'blog.cameronengineer.com'
 languageCode = 'en-us'
 title = "Cameron's Note's"
-theme = ["osm", "archie"]
+theme = ["archie"]
 
 
 [module]
@@ -10,7 +10,9 @@ theme = ["osm", "archie"]
 
 [params]
 	mode="auto"
-  favicon = "favicon.png"
+  favicon = "/favicon.png"
+  useCDN = false
+  Description = "A personal blog sharing notes and insights on topics I care about — from engineering and cybersecurity to flying, cooking, and hiking."
 
 [[params.social]]
 name = "LinkedIn"
