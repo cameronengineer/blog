@@ -1,7 +1,8 @@
 baseURL = 'blog.cameronengineer.com'
 languageCode = 'en-us'
-title = "Camerons Note's"
+title = "Cameron's Note's"
 theme = ["osm", "archie"]
+
 
 [module]
   [[module.imports]]
@@ -9,6 +10,7 @@ theme = ["osm", "archie"]
 
 [params]
 	mode="auto"
+  favicon = "favicon.png"
 
 [[params.social]]
 name = "LinkedIn"
