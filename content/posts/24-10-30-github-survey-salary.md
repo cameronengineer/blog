@@ -17,7 +17,7 @@ I have a particular interest in professional skill development. Soft skills are 
 
 To identify which skills are worth focusing on, I undertook an analysis of the [2024 Stack Overflow Developer Survey dataset](https://survey.stackoverflow.co/) . The anonymous survey of over 6500 developers collected data on the respondents' education, total compensation, years of experience, and use of programming languages and frameworks.
 
-A correlation analysis was conducted ([link to analysis](/24-10-30-github-servey-salary/24-10-30-github-survey-salary.ipynb)) to explore the relationship between these factors and total compensation. P-values below 0.05 were considered statistically significant. Although strong correlations are hard to find, many weaker correlations where discovered. Economic outcomes are influenced by numerous factors, so weaker correlations still offer valuable insight.  
+A correlation analysis was conducted ([link to analysis](24-10-30-github-survey-salary.ipynb)) to explore the relationship between these factors and total compensation. P-values below 0.05 were considered statistically significant. Although strong correlations are hard to find, many weaker correlations where discovered. Economic outcomes are influenced by numerous factors, so weaker correlations still offer valuable insight.  
 
 For this analysis, the dataset has been filtered to only include full-time professional developers who provided their total compensation information. Developer compensation varies due to local economic conditions, so even if total compensation were normalised to a single currency, comparisons between respondents in different countries would not yield valid results. Instead, each correlation will be evaluated independently for each country.
 
@@ -44,7 +44,7 @@ After filtering, the countries with the most respondents were the USA, Germany a
 
 Of the 213 factors investigated, only a small subset where statistically significant. The below diagram shows these factors sorted in order of strength of correlation (r). P-values, shown in red are also displayed, and it can be seen that the majority of factors has P-values below 0.05 (red dashed line). 
 
-![](/24-10-30-github-servey-salary/factors_and_p_value.png)
+![](factors_and_p_value.png)
 
 Its also important to note that many factors were only statistically significant in a particular region. The smaller datasets, especially Australia, had fewer statistically significant correlations than the US.
 

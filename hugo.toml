@@ -41,3 +41,8 @@ weight = 3
 [services]
   [services.googleAnalytics]
     id = 'G-MSXT4PVT9B'
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true

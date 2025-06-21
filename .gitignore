@@ -9,6 +9,9 @@ hugo.exe
 hugo.darwin
 hugo.linux
 
+# Ignore python virtual environments
+*.venv/
+
 # End of https://mrkandreev.name/snippets/gitignore-generator/#Hugo
 
 
