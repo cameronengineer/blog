@@ -24,22 +24,22 @@ name = "GitHub"
 icon = "github"
 url  = "https://github.com/cameronengineer"
 
-[[menu.main]]
-name = "Home"
-url = "/"
-weight = 1
+# [[menu.main]]
+# name = "Home"
+# url = "/"
+# weight = 1
 
 
-[[menu.main]]
-name = "Flying"
-url = "/tags/Flying"
-weight = 2
+# [[menu.main]]
+# name = "Flying"
+# url = "/tags/Flying"
+# weight = 2
 
 
-[[menu.main]]
-name = "Engineering"
-url = "/tags/Engineering"
-weight = 3
+# [[menu.main]]
+# name = "Engineering"
+# url = "/tags/Engineering"
+# weight = 3
 
 
 [services]
