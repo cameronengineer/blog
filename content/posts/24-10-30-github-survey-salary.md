@@ -9,10 +9,11 @@ tags:
   - engineering
 toc: true
 ---
+
 What tech skills do developers need to get paid more?
 
-
 I have a particular interest in professional skill development. Soft skills are timeless and an area that should always be worked on. What's less timeless are technology skills. With the technology landscape rapidly evolving, developers must continuously review and update their technology skill set to stay competitive.
+
 ## Method
 
 To identify which skills are worth focusing on, I undertook an analysis of the [2024 Stack Overflow Developer Survey dataset](https://survey.stackoverflow.co/) . The anonymous survey of over 6500 developers collected data on the respondents' education, total compensation, years of experience, and use of programming languages and frameworks.
