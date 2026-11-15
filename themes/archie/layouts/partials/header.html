@@ -32,7 +32,7 @@
         <link href="https://fonts.googleapis.com/css2?family=Fira+Sans&display=swap" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
 	{{- else -}}
-	{{ $fontstyle := resources.Get "css/fonts.css" | fingerprint }}
+	{{ $fontstyle := resources.Get "css/fonts.css" | minify | fingerprint }}
         <link href="{{ $fontstyle.Permalink }}" rel="stylesheet">
 	{{ end }}
 
