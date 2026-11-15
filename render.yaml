@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: blog
+    runtime: static
+    repo: https://github.com/cameronengineer/blog
+    branch: main
+    autoDeployTrigger: commit
+    buildCommand: bash scripts/render-build.sh
+    staticPublishPath: public
+    domains:
+      - blog.cameronengineer.com
+    envVars:
+      - key: HUGO_VERSION
+        value: 0.128.0
+      - key: HUGO_ENVIRONMENT
+        value: production
