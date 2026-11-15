@@ -1,20 +1,61 @@
-# Blog
+# Cameron's notes
 
-Hugo blog hosted on Render: https://blog-kcnz.onrender.com/.
+A small Markdown-to-HTML blog. Python compiles the posts; Render serves the plain
+HTML, CSS, images and a small optional search script. No Hugo, theme framework,
+Node.js or server application.
 
-Render builds `main` automatically with `bash scripts/render-build.sh` and serves
-the generated `public` directory. The build pins Hugo Extended 0.128.0, matching
-the previous production build. `render.yaml` records the service configuration.
+## Build and preview
 
-For local development, install Hugo Extended 0.128.0 and Go 1.23.2 or newer, then
-run `hugo server`. To check a production build, run `hugo --gc --minify`.
+```sh
+python3 -m venv .venv
+.venv/bin/pip install -r requirements.txt
+.venv/bin/python scripts/build.py
+.venv/bin/python -m http.server 8000 --directory public
+```
 
-## Custom domain cutover
+Open http://localhost:8000. The script requires Python 3.10 or newer and two
+libraries: Python-Markdown and PyYAML. It recreates `public/` on every build.
 
-The existing domain is `blog.cameronengineer.com`. In Cloudflare, change the `blog`
-CNAME target to `blog-kcnz.onrender.com` (DNS only while Render verifies the
-domain and provisions TLS). Verify the domain in Render, then set `HUGO_BASEURL`
-to `https://blog.cameronengineer.com/` in the service environment and redeploy.
-Until then, Render builds use its own address so links and assets work there.
+## Write a note
 
-GitHub Pages can be disabled after the custom domain serves the Render site.
+Add a Markdown file in `content/posts/`, for example `26-11-15-a-new-note.md`:
+
+```yaml
+---
+title: A new note
+description: A short description for the index and link previews.
+date: 2026-11-15
+lastmod: 2026-11-15
+draft: false
+tags:
+  - engineering
+---
+```
+
+Write the post below the front matter. Tables, fenced code, normal Markdown and
+inline HTML are supported. Headings get anchors and an automatic contents list.
+Drafts stay out of the site, topic pages, feed and sitemap.
+
+The filename becomes `/posts/26-11-15-a-new-note/`. Put images and downloads in
+`static/posts/26-11-15-a-new-note/` and link them with relative paths in Markdown.
+Files in `static/` are copied unchanged, including the existing interactive map.
+
+Edit `templates/base.html` for the shared page layout, `assets/style.css` for the
+visual design, and `scripts/build.py` for the index and article structure.
+
+## Deploy
+
+Push to `main`. Render runs `bash scripts/render-build.sh` and publishes `public/`.
+The site is https://blog.cameronengineer.com/ (also available at
+https://blog-kcnz.onrender.com/); its configuration is recorded in
+`render.yaml`. GitHub Pages is no longer used for builds.
+
+`SITE_URL=https://blog.cameronengineer.com` sets canonical URLs, RSS and the sitemap
+on Render. If unset, builds fall back to `RENDER_EXTERNAL_URL`, then the custom domain.
+For a local override, use `scripts/build.py --base-url https://example.com`.
+
+## Checks
+
+```sh
+.venv/bin/python -m unittest discover -s tests
+```

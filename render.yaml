@@ -10,7 +10,5 @@ services:
     domains:
       - blog.cameronengineer.com
     envVars:
-      - key: HUGO_VERSION
-        value: 0.128.0
-      - key: HUGO_ENVIRONMENT
-        value: production
+      - key: SITE_URL
+        value: https://blog.cameronengineer.com

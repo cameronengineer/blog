@@ -1,17 +1,5 @@
-.obsidian
-
-# Generated files by hugo
+.obsidian/
+.DS_Store
+.venv/
+__pycache__/
 /public/
-/resources/_gen/
-
-# Executable may be added to repository
-hugo.exe
-hugo.darwin
-hugo.linux
-
-# Ignore python virtual environments
-*.venv/
-
-# End of https://mrkandreev.name/snippets/gitignore-generator/#Hugo
-
-
