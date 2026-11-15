@@ -102,6 +102,9 @@ def build(output: Path, base_url: str):
         raise ValueError("Base URL must be an absolute http(s) address at the domain root")
     base_url = base_url.rstrip("/")
     posts = read_posts()
+    topic_navigation = ''.join(
+        f'<a href="{tag_url(tag)}">{name}</a>'
+        for tag, name in TOPICS.items() if any(tag in p.tags for p in posts))
     template = Template((ROOT / "templates/base.html").read_text())
     if output.exists():
         shutil.rmtree(output)
@@ -119,7 +122,8 @@ def build(output: Path, base_url: str):
         write(url.lstrip("/") + "index.html", template.substitute(
             title=escape(title + " · Cameron's notes", quote=True),
             description=escape(description, quote=True), canonical=escape(base_url + url, quote=True),
-            og_type="article" if article else "website", content=content))
+            og_type="article" if article else "website", content=content,
+            topic_navigation=topic_navigation))
         pages.append(url)
 
     topic_counts = Counter(t for p in posts for t in p.tags)
@@ -153,7 +157,7 @@ def build(output: Path, base_url: str):
              f'<div class="breadcrumb"><a href="/">The notebook</a> / <a href="/tags/">Topics</a></div><div class="topic-head"><p class="eyebrow">Filed under</p><h1>{escape(tag.capitalize())}.</h1><p>{len(selected)} {"note" if len(selected) == 1 else "notes"} from the notebook.</p></div><section class="notebook">{note_list(selected)}</section>')
     page("/categories/", "Topics", "Browse the notebook by topic.", f'<div class="topic-head"><h1>Follow a topic.</h1><ul class="topic-list">{topic_items}</ul></div>')
     error = template.substitute(title="Page not found · Cameron's notes", description="This page isn't in the notebook.",
-         canonical=base_url + '/404.html', og_type="website", content='<div class="topic-head"><p class="eyebrow">404 · A wrong turn</p><h1>Not in this notebook.</h1><p>This page may have moved, or the address may be mistyped.</p><p><a href="/">Back to the notebook →</a></p></div>')
+         canonical=base_url + '/404.html', og_type="website", topic_navigation=topic_navigation, content='<div class="topic-head"><p class="eyebrow">404 · A wrong turn</p><h1>Not in this notebook.</h1><p>This page may have moved, or the address may be mistyped.</p><p><a href="/">Back to the notebook →</a></p></div>')
     write("404.html", error)
     # Preserve Hugo's first-page aliases as normal HTML redirects.
     for alias, target in (("page/1/index.html", "/"), ("posts/page/1/index.html", "/posts/")):

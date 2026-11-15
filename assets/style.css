@@ -83,6 +83,23 @@ nav a {
 nav a:hover {
   text-decoration:underline;
 }
+.header-nav {
+  align-items:center;
+  flex-wrap:wrap;
+  gap:20px;
+}
+.nav-topics, .nav-external {
+  display:flex;
+  align-items:center;
+  gap:20px;
+}
+.nav-external {
+  border-left:1px solid #a5afa2;
+  padding-left:20px;
+}
+.header-nav a {
+  white-space:nowrap;
+}
 h1,h2,h3 {
   font-family:var(--serif);
   font-weight:400;
@@ -495,6 +512,8 @@ tbody tr:last-child td {
   .site-header {
     padding:20px 0;
     gap:14px;
+    flex-direction:column;
+    align-items:flex-start;
   }
   .brand {
     font-size:27px;
@@ -502,6 +521,12 @@ tbody tr:last-child td {
   nav {
     gap:15px;
     font-size:11px;
+  }
+  .header-nav, .nav-topics, .nav-external {
+    gap:12px;
+  }
+  .nav-external {
+    padding-left:12px;
   }
   .intro {
     grid-template-columns:1fr;
