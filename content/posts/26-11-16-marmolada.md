@@ -1,6 +1,6 @@
 ---
 title: 'Glacier-free Marmolada: Punta Penia via Val Contrin'
-description: 'My glacier-free route to Punta Penia on Marmolada: parking at Alba di Canazei, Val Contrin, the west ridge via ferrata, photos and a 3D route map.'
+description: 'A glacier-free route to Punta Penia on Marmolada: parking at Alba di Canazei, Val Contrin, the west ridge via ferrata, photos and a 3D route map.'
 date: 2026-11-16
 lastmod: 2026-11-16
 draft: false
@@ -19,7 +19,7 @@ cover:
 
 I climbed **Punta Penia, the highest peak in the Dolomites**, on 9 August 2026 using a glacier-free route from Alba di Canazei. I approached through **Val Contrin**, climbed the **west ridge via ferrata (Cresta Ovest)** and returned the same way, without crossing the glacier.
 
-If you’re looking for a way up Marmolada without a glacier crossing, the approach and descent are the important details. My day was **22.4 km, 1,887 m of ascent and 10 hours 34 minutes**, starting and finishing in the valley.
+If you’re looking for a way up Marmolada without a glacier crossing, the approach and descent are the important details. The day was **22.4 km, 1,887 m of ascent and 10 hours 34 minutes**, starting and finishing in the valley.
 
 ## Parking in Alba di Canazei
 
@@ -36,7 +36,7 @@ From Alba, I followed the valley approach past Rifugio Contrin, then continued u
 
 This is the distinction to look for when comparing routes: an itinerary described simply as “Marmolada west ridge” may approach from Passo Fedaia and include glacier terrain. The [southern approach described by local mountain guide Bruno Belligoli](https://www.bergfuehrerdolomiten.it/en/westridge-glacier-marmolada/) goes from Contrin to the saddle without a glacier crossing and returns through Contrin.
 
-My early video was taken at 05:35. By the 07:33 photo, the trees had given way to steep rock, with my pack resting beside the cables.
+The early video was taken at 05:35. By the 07:33 photo, the trees had given way to steep rock, with the pack resting beside the cables.
 
 <div class="trip-grid">
 <figure class="trip-item" id="media-first-light"><video controls playsinline preload="none" poster="media/first-light-poster.jpg" width="720" height="1280" aria-label="First light on the climb"><source src="media/first-light.mp4" type="video/mp4">Your browser does not support video. <a href="media/first-light.mp4">Open the clip</a>.</video><figcaption><time datetime="2026-08-09T05:35:54+02:00">05:35</time> · First light on the climb.</figcaption></figure>
@@ -47,11 +47,10 @@ My early video was taken at 05:35. By the 07:33 photo, the trees had given way t
 
 The upper part follows the west ridge, also called the **Cresta Ovest via ferrata**. It is a climb with fixed cables and exposed terrain, so the glacier-free approach still leads to an alpine via ferrata.
 
-I reached the summit area in time for the photos at 09:30. [Punta Penia is 3,343 metres high and the highest point in the Dolomites](https://www.visitmarmolada.com/en/places/marmolada/). My watch recorded a maximum of 3,349 metres. The wide panorama at the top of this post was taken at 10:06.
+The summit photo was taken at 09:30. [Punta Penia is 3,343 metres high and the highest point in the Dolomites](https://www.visitmarmolada.com/en/places/marmolada/). The watch recorded a maximum of 3,349 metres. The wide panorama at the top of this post was taken at 10:06.
 
 <div class="trip-grid">
 <figure class="trip-item" id="media-summit"><a href="media/summit-1600.webp"><img src="media/summit-960.webp" srcset="media/summit-480.webp 480w, media/summit-960.webp 960w, media/summit-1600.webp 1600w" sizes="(max-width: 600px) calc(100vw - 36px), (max-width: 850px) calc((100vw - 88px) / 2), 358px" alt="At the summit cross on Punta Penia" width="960" height="720" loading="lazy" decoding="async"></a><figcaption><time datetime="2026-08-09T09:30:44+02:00">09:30</time> · At the summit cross on Punta Penia.</figcaption></figure>
-<figure class="trip-item" id="media-summit-cross"><a href="media/summit-cross-1600.webp"><img src="media/summit-cross-960.webp" srcset="media/summit-cross-480.webp 480w, media/summit-cross-960.webp 960w, media/summit-cross-1600.webp 1600w" sizes="(max-width: 600px) calc(100vw - 36px), (max-width: 850px) calc((100vw - 88px) / 2), 358px" alt="Another moment beside the summit cross" width="960" height="720" loading="lazy" decoding="async"></a><figcaption><time datetime="2026-08-09T09:30:45+02:00">09:30</time> · Another moment beside the summit cross.</figcaption></figure>
 </div>
 
 ## Return down the west ridge
@@ -64,7 +63,7 @@ The clip below was taken at 10:42 on the descent. I was back at the car by 14:36
 <figure class="trip-item" id="media-descent"><video controls playsinline preload="none" poster="media/descent-poster.jpg" width="720" height="1280" aria-label="Rock, snow and cloud beside the cables on the descent"><source src="media/descent.mp4" type="video/mp4">Your browser does not support video. <a href="media/descent.mp4">Open the clip</a>.</video><figcaption><time datetime="2026-08-09T10:42:13+02:00">10:42</time> · Rock, snow and cloud beside the cables on the descent.</figcaption></figure>
 </div>
 
-## 3D map of my glacier-free Marmolada route
+## 3D map of the glacier-free Marmolada route
 
 <iframe class="hike-map" src="map.html" title="3D map of the glacier-free Marmolada route from Alba through Val Contrin to Punta Penia" width="100%" height="780" loading="lazy" allow="fullscreen"></iframe>
 
@@ -72,10 +71,6 @@ Rotate and tilt the map to see the southern approach and west ridge, or switch t
 
 [Open the route map full size](map.html) · [View the route outline](route.svg) · [View the elevation profile](elevation.svg)
 
-## What glacier-free means here
+## Conditions
 
-This is the line I used on **9 August 2026**, recorded in the map above. Snow or ice can still affect the approach, ferrata and summit; avoiding a glacier crossing does not establish what equipment a later visit will need.
-
-It is a long alpine outing requiring fitness, comfort with exposure and proper via ferrata equipment, including a helmet, harness and ferrata set. Check current conditions with a local mountain guide before choosing the route. The [official west-ridge information](https://www.visitmarmolada.com/en/activities/via-ferrata-routes/marmolada-west-ridge-via-ferrata/) also distinguishes a return by the ascent route from a descent across the Marmolada glacier.
-
-For the valley approach, see [Rifugio Contrin’s own information](https://www.rifugiocontrin.it/). My timings and track describe this particular day, rather than a guaranteed schedule or current route conditions.
+Conditions vary, and the experience on this trip may not be representative of what you encounter on the same route.

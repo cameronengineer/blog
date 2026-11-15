@@ -9,7 +9,7 @@ class HikeDataTests(unittest.TestCase):
     def test_media_positions_and_mobile_asset_sizes(self):
         root = Path(__file__).resolve().parents[1] / 'static/posts/26-11-16-marmolada'
         media = json.loads((root / 'media.json').read_text())
-        self.assertEqual(len(media), 7)
+        self.assertEqual(len(media), 6)
         self.assertEqual(len([m for m in media if m['mapLabel']]), 5)
         self.assertEqual([m['capturedLocal'] for m in media], sorted(m['capturedLocal'] for m in media))
         for item in media:

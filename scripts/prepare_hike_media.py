@@ -23,7 +23,6 @@ SPECS = [
     ('IMG_1784.MOV', 'first-light', 'First light on the climb', 'the-climb', 'video', '1'),
     ('IMG_1788.heic', 'on-the-climb', 'Looking back down from the rocky ascent', 'the-climb', 'photo', '2'),
     ('IMG_1808.heic', 'summit', 'At the summit cross on Punta Penia', 'at-the-top', 'photo', '3'),
-    ('IMG_1809.heic', 'summit-cross', 'Another moment beside the summit cross', 'at-the-top', 'photo', None),
     ('IMG_1827.heif', 'summit-panorama', 'Panorama from Punta Penia, above the clouds', 'at-the-top', 'cover', None),
     ('IMG_1832.MOV', 'descent', 'Rock, snow and cloud beside the cables on the descent', 'the-descent', 'video', '4'),
     ('IMG_1837.heic', 'back-in-the-valley', 'Back at the car beneath the cable cars', 'the-descent', 'photo', '5'),

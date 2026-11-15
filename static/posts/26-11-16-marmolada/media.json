@@ -70,29 +70,6 @@
     "srcset": "media/summit-480.webp 480w, media/summit-960.webp 960w, media/summit-1600.webp 1600w"
   },
   {
-    "id": "summit-cross",
-    "type": "photo",
-    "src": "media/summit-cross-960.webp",
-    "thumbnail": "media/summit-cross-thumb.webp",
-    "caption": "Another moment beside the summit cross",
-    "chapter": "west-ridge-via-ferrata-to-punta-penia",
-    "mapLabel": null,
-    "capturedLocal": "2026-08-09T09:30:45+02:00",
-    "time": "09:30",
-    "coordinate": [
-      11.851363,
-      46.434549
-    ],
-    "distanceKm": 11.32,
-    "elevationM": 3345,
-    "positionMethod": "capture time and GPS",
-    "cameraGpsOffsetM": 4,
-    "recordingTimeOffsetSeconds": 3,
-    "width": 960,
-    "height": 720,
-    "srcset": "media/summit-cross-480.webp 480w, media/summit-cross-960.webp 960w, media/summit-cross-1600.webp 1600w"
-  },
-  {
     "id": "summit-panorama",
     "type": "cover",
     "src": "media/summit-panorama-2400.webp",
