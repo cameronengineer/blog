@@ -726,3 +726,16 @@ tbody tr:last-child td {
     gap:28px;
   }
 }
+
+.prose iframe.parking-map {
+  display:block;
+  width:100%;
+  height:auto;
+  aspect-ratio:3 / 4;
+  border:1px solid var(--line);
+  border-radius:4px;
+}
+.trip-grid:has(> .trip-item:only-child) {
+  grid-template-columns:minmax(0,1fr);
+  max-width:440px;
+}
