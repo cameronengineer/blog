@@ -34,7 +34,10 @@ tags:
 
 Write the post below the front matter. Tables, fenced code, normal Markdown and
 inline HTML are supported. Headings get anchors and an automatic contents list.
-Drafts stay out of the site, topic pages, feed and sitemap.
+Set `draft: true` to build an unlisted preview at the normal post URL. Drafts
+are omitted from the homepage, post lists, topic pages, search, RSS and sitemap,
+and include a `noindex` tag. Anyone with the URL can open them. Set `draft: false`
+to publish the post and remove `noindex` on the next deployment.
 
 The filename becomes `/posts/26-11-15-a-new-note/`. Put images and downloads in
 `static/posts/26-11-15-a-new-note/` and link them with relative paths in Markdown.

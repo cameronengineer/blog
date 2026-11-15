@@ -68,7 +68,7 @@ date: 2026-01-03
 draft: true
 tags: [secret]
 ---
-Never publish this.
+Draft preview body.
 ''')
             out = root / 'public'
             with patch.object(build, 'ROOT', root):
@@ -76,10 +76,14 @@ Never publish this.
                 (out / 'stale.html').write_text('obsolete')
                 build.build(out, 'https://example.com')
             self.assertFalse((out / 'stale.html').exists())
-            self.assertFalse((out / 'posts/26-01-03-secret').exists())
+            draft_path = out / 'posts/26-01-03-secret/index.html'
+            draft_html = draft_path.read_text()
+            self.assertIn('Draft preview body.', draft_html)
+            self.assertIn('<meta name="robots" content="noindex">', draft_html)
+            self.assertNotIn('href="/tags/secret/"', draft_html)
             self.assertFalse((out / 'tags/secret').exists())
             for path in out.rglob('*'):
-                if path.suffix in ('.xml', '.html'):
+                if path.suffix in ('.xml', '.html') and path != draft_path:
                     self.assertNotIn('Secret draft', path.read_text())
             html = (out / 'posts/26-01-01-first/index.html').read_text()
             self.assertIn('A &lt;small&gt; note &amp; example', html)
@@ -92,6 +96,18 @@ Never publish this.
             self.assertEqual([i.findtext('title') for i in items], ['Second', 'A <small> note & example'])
             self.assertEqual(len(ET.parse(out / 'tags/engineering/index.xml').findall('./channel/item')), 1)
             self.assertIn('https://example.com/posts/26-01-01-first/', (out / 'sitemap.xml').read_text())
+            self.assertNotIn('/posts/26-01-03-secret/', (out / 'sitemap.xml').read_text())
+            self.assertNotIn('content="noindex"', html)
+            # Publishing a preview removes noindex and makes it discoverable.
+            draft_source = root / 'content/posts/26-01-03-secret.md'
+            draft_source.write_text(draft_source.read_text().replace('draft: true', 'draft: false'))
+            with patch.object(build, 'ROOT', root):
+                build.build(out, 'https://example.com')
+            self.assertNotIn('content="noindex"', draft_path.read_text())
+            self.assertIn('Secret draft', (out / 'index.html').read_text())
+            self.assertIn('Secret draft', (out / 'index.xml').read_text())
+            self.assertIn('/posts/26-01-03-secret/', (out / 'sitemap.xml').read_text())
+            self.assertTrue((out / 'tags/secret/index.html').exists())
 
     def test_real_site_has_no_broken_internal_links_or_fragments(self):
         with tempfile.TemporaryDirectory() as tmp:

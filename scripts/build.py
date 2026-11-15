@@ -37,6 +37,7 @@ class Post:
     toc: str
     minutes: int
     cover: dict | None = None
+    draft: bool = False
 
     @property
     def url(self):
@@ -51,8 +52,9 @@ def read_posts():
         if not match:
             raise ValueError(f"{path.name}: expected YAML front matter between --- lines")
         meta = yaml.safe_load(match[1])
-        if meta.get("draft", False):
-            continue
+        draft = meta.get("draft", False)
+        if not isinstance(draft, bool):
+            raise ValueError(f"{path.name}: draft must be true or false")
         published = date.fromisoformat(str(meta["date"])[:10])
         updated = date.fromisoformat(str(meta.get("lastmod", published))[:10])
         title = str(meta["title"])
@@ -70,7 +72,7 @@ def read_posts():
         if cover is not None and (not isinstance(cover, dict) or not all(k in cover for k in ("src", "alt", "width", "height"))):
             raise ValueError(f"{path.name}: cover needs src, alt, width and height")
         posts.append(Post(path.stem, title, str(meta.get("description", "")), published,
-                          updated, tags, body, md.toc if md.toc_tokens else "", minutes, cover))
+                          updated, tags, body, md.toc if md.toc_tokens else "", minutes, cover, draft))
     return sorted(posts, key=lambda p: (p.date, p.slug), reverse=True)
 
 
@@ -78,9 +80,10 @@ def tag_url(tag):
     return f"/tags/{slugify(tag, '-')}/"
 
 
-def tag_links(tags):
+def tag_links(tags, linked=True):
     return '<div class="tags">' + "".join(
-        f'<a href="{tag_url(t)}">{escape(t.capitalize())}</a>' for t in tags) + '</div>'
+        f'<a href="{tag_url(t)}">{escape(t.capitalize())}</a>' if linked else
+        f'<span>{escape(t.capitalize())}</span>' for t in tags) + '</div>'
 
 
 def date_label(value):
@@ -105,7 +108,8 @@ def build(output: Path, base_url: str):
     if parsed.scheme not in ("https", "http") or not parsed.netloc or parsed.path not in ("", "/") or parsed.query or parsed.fragment:
         raise ValueError("Base URL must be an absolute http(s) address at the domain root")
     base_url = base_url.rstrip("/")
-    posts = read_posts()
+    all_posts = read_posts()
+    posts = [p for p in all_posts if not p.draft]
     topic_navigation = ''.join(
         f'<a href="{tag_url(tag)}">{name}</a>'
         for tag, name in TOPICS.items() if any(tag in p.tags for p in posts))
@@ -122,14 +126,16 @@ def build(output: Path, base_url: str):
         destination.parent.mkdir(parents=True, exist_ok=True)
         destination.write_text(text, encoding="utf-8")
 
-    def page(url, title, description, content, article=False, image_url=None):
+    def page(url, title, description, content, article=False, image_url=None, noindex=False):
         write(url.lstrip("/") + "index.html", template.substitute(
             title=escape(title + " · Cameron's notes", quote=True),
             description=escape(description, quote=True), canonical=escape(base_url + url, quote=True),
             og_type="article" if article else "website", content=content,
             topic_navigation=topic_navigation,
+            robots_meta='<meta name="robots" content="noindex">' if noindex else "",
             social_image=f'<meta property="og:image" content="{escape(image_url, quote=True)}">' if image_url else ""))
-        pages.append(url)
+        if not noindex:
+            pages.append(url)
 
     topic_counts = Counter(t for p in posts for t in p.tags)
     search = '''<div class="search" data-search hidden><label for="note-search">Find a note</label><input id="note-search" type="search" placeholder="A word or topic…" autocomplete="off" aria-controls="note-results"></div>'''
@@ -138,7 +144,7 @@ def build(output: Path, base_url: str):
     page("/", "The notebook", DESCRIPTION, home)
     page("/posts/", "All notes", DESCRIPTION,
          '<div class="topic-head"><p class="eyebrow">The notebook</p><h1>All notes.</h1><p>Most recent first. Follow a curiosity.</p></div><section class="notebook">' + note_list(posts) + '</section>')
-    for p in posts:
+    for p in all_posts:
         cover = ""
         if p.cover:
             c = p.cover
@@ -148,10 +154,10 @@ def build(output: Path, base_url: str):
         modified = f'<span>Updated {date_label(p.updated)}</span>' if p.updated != p.date else ''
         content = f'''<div class="breadcrumb"><a href="/">The notebook</a> <span aria-hidden="true"> / </span> {escape(category)}</div>
           <article><header class="article-head"><p class="eyebrow">{escape(category)}</p><h1>{escape(p.title)}</h1>
-          <p class="dek">{escape(p.description)}</p><div class="article-meta"><span>Cameron Mitchell</span><time datetime="{p.date}">{date_label(p.date)}</time><span>{p.minutes} min read</span>{modified}</div>{tag_links(p.tags)}</header>
+          <p class="dek">{escape(p.description)}</p><div class="article-meta"><span>Cameron Mitchell</span><time datetime="{p.date}">{date_label(p.date)}</time><span>{p.minutes} min read</span>{modified}</div>{tag_links(p.tags, linked=not p.draft)}</header>
           {cover}<div class="article-layout"><div class="prose">{p.body}<div class="article-end"><a href="/#notebook">← Back to the notebook</a></div></div>{toc}</div></article>'''
         page(p.url, p.title, p.description, content, article=True,
-             image_url=base_url + p.url + p.cover['src'] if p.cover else None)
+             image_url=base_url + p.url + p.cover['src'] if p.cover else None, noindex=p.draft)
     topic_items = ''.join(f'<li><a href="{tag_url(t)}">{escape(t.capitalize())} <span class="count">{topic_counts[t]:02}</span></a></li>' for t in sorted(topic_counts))
     page("/tags/", "Topics", "Browse the notebook by topic.", f'<div class="topic-head"><p class="eyebrow">The notebook</p><h1>Follow a topic.</h1><ul class="topic-list">{topic_items}</ul></div>')
     for tag in sorted(topic_counts):
@@ -160,7 +166,7 @@ def build(output: Path, base_url: str):
              f'<div class="breadcrumb"><a href="/">The notebook</a> / <a href="/tags/">Topics</a></div><div class="topic-head"><p class="eyebrow">Filed under</p><h1>{escape(tag.capitalize())}.</h1><p>{len(selected)} {"note" if len(selected) == 1 else "notes"} from the notebook.</p></div><section class="notebook">{note_list(selected)}</section>')
     page("/categories/", "Topics", "Browse the notebook by topic.", f'<div class="topic-head"><h1>Follow a topic.</h1><ul class="topic-list">{topic_items}</ul></div>')
     error = template.substitute(title="Page not found · Cameron's notes", description="This page isn't in the notebook.",
-         canonical=base_url + '/404.html', og_type="website", topic_navigation=topic_navigation, social_image="", content='<div class="topic-head"><p class="eyebrow">404 · A wrong turn</p><h1>Not in this notebook.</h1><p>This page may have moved, or the address may be mistyped.</p><p><a href="/">Back to the notebook →</a></p></div>')
+         canonical=base_url + '/404.html', og_type="website", topic_navigation=topic_navigation, social_image="", robots_meta='<meta name="robots" content="noindex">', content='<div class="topic-head"><p class="eyebrow">404 · A wrong turn</p><h1>Not in this notebook.</h1><p>This page may have moved, or the address may be mistyped.</p><p><a href="/">Back to the notebook →</a></p></div>')
     write("404.html", error)
     # Preserve Hugo's first-page aliases as normal HTML redirects.
     for alias, target in (("page/1/index.html", "/"), ("posts/page/1/index.html", "/posts/")):
@@ -191,7 +197,7 @@ def build(output: Path, base_url: str):
             ET.SubElement(item, "lastmod").text = str(post.updated)
     write("sitemap.xml", ET.tostring(sitemap, encoding="unicode", xml_declaration=True))
     write("robots.txt", f"User-agent: *\nAllow: /\nSitemap: {base_url}/sitemap.xml\n")
-    print(f"Built {len(posts)} posts and {len(pages)} pages → {output}")
+    print(f"Built {len(posts)} published posts, {len(all_posts) - len(posts)} unlisted drafts and {len(pages)} indexed pages → {output}")
 
 
 if __name__ == "__main__":
