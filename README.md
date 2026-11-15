@@ -59,3 +59,24 @@ For a local override, use `scripts/build.py --base-url https://example.com`.
 ```sh
 .venv/bin/python -m unittest discover -s tests
 ```
+
+## Recorded adventures
+
+The Marmolada post has a standalone route viewer in
+`static/posts/26-11-16-marmolada/`. MapLibre GL JS 5.6.1 is vendored in
+`assets/vendor/` with its licence. The map fetches OpenStreetMap basemap tiles
+and Mapterhorn elevation tiles as needed. Route and elevation SVGs work without
+those services or JavaScript. The viewer does not require an API key.
+
+To import another FIT recording (an optional authoring tool, separate from the
+site build):
+
+```sh
+.venv/bin/pip install fitdecode==0.11.0
+.venv/bin/python scripts/import_hike.py /path/to/activity.fit static/posts/post-slug
+```
+
+This exports GPS positions, recorded elevation and distance, a small activity
+summary, and the fallback SVGs. It excludes health metrics and device details.
+Keep the original FIT file outside the public site. Write the corresponding
+Markdown post separately; the importer does not invent trip details.

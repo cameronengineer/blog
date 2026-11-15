@@ -22,7 +22,7 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 DESCRIPTION = "Notes on engineering, languages and flying. A personal notebook by Cameron Mitchell."
-TOPICS = {"languages": "Languages", "engineering": "Engineering", "flying": "Flying"}
+TOPICS = {"languages": "Languages", "engineering": "Engineering", "flying": "Flying", "adventure": "Adventure"}
 
 
 @dataclass

@@ -676,3 +676,8 @@ tbody tr:last-child td {
     break-inside:avoid;
   }
 }
+
+/* Give the route explorer enough room on phones as well as larger screens. */
+.prose iframe.hike-map {
+  height:760px;
+}
