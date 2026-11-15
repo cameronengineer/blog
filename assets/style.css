@@ -677,7 +677,52 @@ tbody tr:last-child td {
   }
 }
 
-/* Give the route explorer enough room on phones as well as larger screens. */
+
+.article-cover {
+  margin:32px 0 0;
+}
+.article-cover img {
+  display:block;
+  width:100%;
+  height:auto;
+  border-radius:4px;
+}
+.article-cover figcaption, .trip-item figcaption {
+  margin-top:10px;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.65;
+}
+.trip-grid {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:24px;
+  margin:28px 0 38px;
+  align-items:start;
+}
+.trip-item {
+  margin:0;
+  min-width:0;
+}
+.trip-item img, .trip-item video {
+  display:block;
+  width:100%;
+  height:auto;
+  border:1px solid var(--line);
+  border-radius:4px;
+  background:var(--tint);
+}
+.trip-item time {
+  color:var(--green);
+  font-variant-numeric:tabular-nums;
+  font-weight:600;
+}
 .prose iframe.hike-map {
-  height:760px;
+  height:780px;
+}
+@media(max-width:600px) {
+  .trip-grid {
+    grid-template-columns:1fr;
+    gap:28px;
+  }
 }

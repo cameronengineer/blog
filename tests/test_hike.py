@@ -6,6 +6,31 @@ import unittest
 
 
 class HikeDataTests(unittest.TestCase):
+    def test_media_positions_and_mobile_asset_sizes(self):
+        root = Path(__file__).resolve().parents[1] / 'static/posts/26-11-16-marmolada'
+        media = json.loads((root / 'media.json').read_text())
+        self.assertEqual(len(media), 7)
+        self.assertEqual(len([m for m in media if m['mapLabel']]), 5)
+        self.assertEqual([m['capturedLocal'] for m in media], sorted(m['capturedLocal'] for m in media))
+        for item in media:
+            self.assertTrue((root / item['src']).exists())
+            self.assertTrue((root / item['thumbnail']).exists())
+            self.assertLessEqual(item['recordingTimeOffsetSeconds'], 90)
+            if item['type'] == 'video':
+                self.assertTrue((root / item['poster']).exists())
+                self.assertLess((root / item['src']).stat().st_size, 4 * 1024**2)
+            else:
+                for candidate in item['srcset'].split(', '):
+                    path, _ = candidate.split()
+                    self.assertTrue((root / path).exists())
+                    self.assertLess((root / path).stat().st_size, 1024**2)
+        descent = next(m for m in media if m['id'] == 'descent')
+        self.assertGreater(descent['cameraGpsOffsetM'], 2000)
+        self.assertEqual(descent['positionMethod'], 'capture time')
+        for item in media:
+            if item['id'] != 'descent':
+                self.assertLess(item['cameraGpsOffsetM'], 20)
+
     def test_track_summary_and_public_fields(self):
         source = Path(__file__).resolve().parents[1] / 'static/posts/26-11-16-marmolada/route.json'
         data = json.loads(source.read_text())

@@ -80,3 +80,15 @@ This exports GPS positions, recorded elevation and distance, a small activity
 summary, and the fallback SVGs. It excludes health metrics and device details.
 Keep the original FIT file outside the public site. Write the corresponding
 Markdown post separately; the importer does not invent trip details.
+
+The hike's `media.json` records capture times, matched track positions and the
+GPS cross-check. Five numbered map markers link back to the chronological media
+in the article. One video's camera GPS disagrees with the track; its marker is
+explicitly labelled as an approximate position based on capture time.
+
+Media is prepared once, not during a Render build. `scripts/prepare_hike_media.py`
+takes ExifTool metadata JSON and the original FIT file. It requires Pillow,
+pillow-heif, fitdecode, ffmpeg, and macOS `avconvert` for tone-mapping HDR clips.
+It exports responsive WebP photographs, H.264/AAC MP4 clips with fast-start,
+posters and thumbnails. Originals stay outside the repository. Live Photo motion
+companions are not duplicated as separate videos.

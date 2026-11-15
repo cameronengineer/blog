@@ -8,9 +8,10 @@
   const reset = document.querySelector('#reset');
   let map;
   try {
-    const response = await fetch('route.json');
-    if (!response.ok) throw new Error('Route data unavailable');
+    const [response, mediaResponse] = await Promise.all([fetch('route.json'), fetch('media.json')]);
+    if (!response.ok || !mediaResponse.ok) throw new Error('Route data unavailable');
     const route = await response.json();
+    const media = await mediaResponse.json();
     const coordinates = route.coordinates;
     const summary = route.summary;
     const highest = coordinates[summary.highestIndex];
@@ -78,11 +79,35 @@
       map.addLayer({id: 'route-line', type: 'line', source: 'route', layout: {'line-cap': 'round', 'line-join': 'round'}, paint: {'line-color': '#2f5948', 'line-width': 4}});
       map.addSource('position', {type: 'geojson', data: feature(coordinates[0])});
       map.addLayer({id: 'position-dot', type: 'circle', source: 'position', paint: {'circle-radius': 6, 'circle-color': '#946a2f', 'circle-stroke-color': 'white', 'circle-stroke-width': 2}});
-      new maplibregl.Marker({color: '#2f5948', scale: 0.7}).setLngLat(coordinates[0]).setPopup(new maplibregl.Popup().setText('Start / finish · near Penìa')).addTo(map);
       new maplibregl.Marker({color: '#946a2f', scale: 0.7}).setLngLat(highest).setPopup(new maplibregl.Popup().setText('Punta Penia · highest recorded elevation 3,349 m')).addTo(map);
+      for (const item of media.filter(item => item.mapLabel)) {
+        const button = document.createElement('button');
+        button.className = 'media-marker';
+        button.dataset.mediaId = item.id;
+        button.textContent = item.mapLabel;
+        button.setAttribute('aria-label', `${item.time} · ${item.caption}`);
+        const card = document.createElement('div');
+        card.className = 'media-popup';
+        const image = document.createElement('img');
+        image.src = item.thumbnail;
+        image.alt = item.caption;
+        image.width = 180;
+        image.loading = 'lazy';
+        const label = document.createElement('p');
+        label.textContent = `${item.time} · ${item.caption}`;
+        const position = document.createElement('p');
+        position.textContent = `${item.distanceKm.toFixed(1)} km · ${item.elevationM.toLocaleString()} m${item.positionMethod === 'capture time' ? ' · approximate position, matched by time' : ''}`;
+        const link = document.createElement('a');
+        link.href = new URL(`./#media-${item.id}`, window.location.href).href;
+        link.target = '_parent';
+        link.textContent = item.type === 'video' ? 'Watch in the post →' : 'See in the post →';
+        card.append(image, label, position, link);
+        new maplibregl.Marker({element: button}).setLngLat(item.coordinate)
+          .setPopup(new maplibregl.Popup({offset: 16, maxWidth: '220px'}).setDOMContent(card)).addTo(map);
+      }
       fallback.hidden = true;
       for (const control of [view3d, view2d, reset, slider]) control.disabled = false;
-      status.textContent = 'Drag to pan. Right-drag to rotate and tilt; on a touch screen use two fingers. Move the slider to follow the recorded route. Terrain is shown at its natural height.';
+      status.textContent = 'Numbered markers open photos and videos. Drag to pan; right-drag or use two fingers to tilt. The slider follows the recorded route. Terrain is shown at its natural height.';
       fit();
       map.once('idle', () => { document.body.dataset.mapReady = 'true'; });
     });
