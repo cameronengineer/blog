@@ -181,6 +181,9 @@ p {
   border-top:1px solid var(--line);
   padding:45px 0 65px;
 }
+.notebook:first-child {
+  border-top:0;
+}
 .section-head {
   display:flex;
   justify-content:space-between;
@@ -188,7 +191,9 @@ p {
   gap:25px;
   margin-bottom:28px;
 }
-.section-head h2 {
+.section-head h1, .section-head h2 {
+  font-size:38px;
+  letter-spacing:-1px;
   margin:8px 0 0;
 }
 .search {
@@ -569,7 +574,7 @@ tbody tr:last-child td {
     flex-direction:column;
     gap:20px;
   }
-  .section-head h2 {
+  .section-head h1, .section-head h2 {
     font-size:32px;
   }
   .search {

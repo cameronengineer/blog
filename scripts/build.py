@@ -127,15 +127,8 @@ def build(output: Path, base_url: str):
         pages.append(url)
 
     topic_counts = Counter(t for p in posts for t in p.tags)
-    topics = ''.join(f'<li><a href="{tag_url(t)}"><span>{name}</span><span class="count">{topic_counts[t]:02}</span></a></li>'
-                     for t, name in TOPICS.items() if topic_counts[t])
     search = '''<div class="search" data-search hidden><label for="note-search">Find a note</label><input id="note-search" type="search" placeholder="A word or topic…" autocomplete="off" aria-controls="note-results"></div>'''
-    home = f'''<section class="intro" aria-labelledby="intro-title"><div><p class="eyebrow">A personal notebook by Cameron Mitchell</p>
-      <h1 id="intro-title">Things I’m learning,<br>written down.</h1>
-      <p class="lead">Notes from building things, learning languages, and finding my way around the sky.</p></div>
-      <aside class="intro-aside" aria-label="Browse by topic"><p class="eyebrow">Following my curiosity</p>
-      <p>A place for the useful things I find along the way, and the occasional rabbit hole.</p><ul class="topic-list">{topics}</ul></aside></section>
-      <section class="notebook" id="notebook" aria-labelledby="notebook-title"><div class="section-head"><div><p class="eyebrow">The notebook</p><h2 id="notebook-title">Notes along the way.</h2></div>{search}</div>
+    home = f'''<section class="notebook" id="notebook" aria-labelledby="notebook-title"><div class="section-head"><h1 id="notebook-title">Notes</h1>{search}</div>
       <div id="note-results">{note_list(posts, latest=True)}</div><p class="search-status" data-search-status role="status">{len(posts)} notes · Most recent first</p></section>'''
     page("/", "The notebook", DESCRIPTION, home)
     page("/posts/", "All notes", DESCRIPTION,
