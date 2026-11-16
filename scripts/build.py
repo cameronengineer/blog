@@ -7,13 +7,15 @@ from collections import Counter
 from dataclasses import dataclass
 from datetime import date, datetime, timezone
 from email.utils import format_datetime
-from html import escape
+from html import escape, unescape
+from html.parser import HTMLParser
+import json
 import os
 from pathlib import Path
 import re
 import shutil
 from string import Template
-from urllib.parse import urlparse
+from urllib.parse import urljoin, urlparse
 import xml.etree.ElementTree as ET
 
 import markdown
@@ -21,8 +23,45 @@ from markdown.extensions.toc import slugify
 import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
-DESCRIPTION = "Notes on engineering, languages and flying. A personal notebook by Cameron Mitchell."
+DESCRIPTION = "Engineering, language learning, flying and hiking notes by Cameron Mitchell, an engineer in Melbourne, Australia. Projects, data analysis and trip reports."
 TOPICS = {"languages": "Languages", "engineering": "Engineering", "flying": "Flying", "adventure": "Adventure"}
+TOPIC_DESCRIPTIONS = {
+    "engineering": "Engineering articles by Cameron Mitchell, including developer salary data and the relationship between technology skills and compensation.",
+    "languages": "Language learning notes by Cameron Mitchell: Italian Anki flashcards, vocabulary decks and word-frequency analysis of Dreaming Spanish videos.",
+    "flying": "Personal flying notes by Cameron Mitchell, including Moorabbin Airport reporting points, radio calls and an interactive approach map.",
+    "adventure": "Hiking and adventure trip reports by Cameron Mitchell, with photographs, recorded routes and interactive maps of the terrain.",
+    "anki": "Italian Anki flashcards with vocabulary, verb forms, pictures and audio: notes on the decks, examples and free downloads.",
+    "italian": "Italian vocabulary and Anki study projects by Cameron Mitchell, including free flashcard decks with pictures, recordings and film examples.",
+    "spanish": "Spanish learning notes and word-frequency analysis: the most common vocabulary in Dreaming Spanish's Super Beginner videos.",
+    "hiking": "Hiking trip reports with photographs and recorded route maps, including a glacier-free ascent of Marmolada through Val Contrin.",
+    "italy": "Trip reports and projects connected to Italy, including the glacier-free Val Contrin route to Punta Penia on Marmolada.",
+}
+
+
+class ArticleImages(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.sources = []
+
+    def handle_starttag(self, tag, attrs):
+        if tag == "img":
+            src = dict(attrs).get("src")
+            if src:
+                self.sources.append(src)
+
+
+def post_images(post, base_url):
+    parser = ArticleImages()
+    parser.feed(post.body)
+    sources = ([post.cover["src"]] if post.cover else []) + parser.sources
+    return list(dict.fromkeys(urljoin(base_url + post.url, src) for src in sources
+                              if urlparse(src).scheme in ("", "http", "https")))
+
+
+def json_ld(nodes):
+    # Escape '<' so author-written titles cannot terminate the script element.
+    data = json.dumps({"@context": "https://schema.org", "@graph": nodes}, ensure_ascii=False).replace("<", "\\u003c")
+    return f'<script type="application/ld+json">{data}</script>'
 
 
 @dataclass
@@ -67,7 +106,7 @@ def read_posts():
         body = re.sub(r"<table>(.*?)</table>", r'<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>\1</table></div>', body, flags=re.S)
         # Keep author-written HTML (including the Moorabbin map) and make embeds accessible.
         body = body.replace('name="iframe"', 'name="iframe" title="Moorabbin reporting points map" loading="lazy"')
-        minutes = max(1, round(len(match[2].split()) / 220))
+        minutes = max(1, round(len(unescape(re.sub(r"<[^>]*>", " ", body)).split()) / 220))
         cover = meta.get("cover")
         if cover is not None and (not isinstance(cover, dict) or not all(k in cover for k in ("src", "alt", "width", "height"))):
             raise ValueError(f"{path.name}: cover needs src, alt, width and height")
@@ -97,7 +136,7 @@ def note_list(posts, latest=False):
         label = "Latest · " + category if latest and i == 0 else category
         rows.append(f'''<article class="note" data-note>
           <div class="note-meta"><span class="eyebrow">{escape(label)}</span><time datetime="{p.date}">{date_label(p.date)}</time></div>
-          <div><h3><a href="{p.url}">{escape(p.title)}</a></h3><p>{escape(p.description)}</p>{tag_links(p.tags)}</div>
+          <div><h2><a href="{p.url}">{escape(p.title)}</a></h2><p>{escape(p.description)}</p>{tag_links(p.tags)}</div>
           <a class="arrow" href="{p.url}" aria-label="Read {escape(p.title, quote=True)}">↗</a>
         </article>''')
     return '<div class="note-list">' + "".join(rows) + '</div>'
@@ -120,28 +159,42 @@ def build(output: Path, base_url: str):
     shutil.copytree(ROOT / "static", output, dirs_exist_ok=True)
     shutil.copytree(ROOT / "assets", output / "assets")
     pages = []
+    images_by_url = {p.url: post_images(p, base_url) for p in posts}
+    website = {"@type": "WebSite", "@id": base_url + "/#website", "url": base_url + "/",
+               "name": "Cameron's notes", "alternateName": "Cameron Mitchell's blog", "inLanguage": "en-AU"}
+    author = {"@type": "Person", "@id": "https://cameronengineer.com/#person", "name": "Cameron Mitchell",
+              "url": "https://cameronengineer.com/", "jobTitle": "Engineer",
+              "homeLocation": {"@type": "Place", "name": "Melbourne, Australia"},
+              "sameAs": ["https://github.com/cameronengineer", "https://www.linkedin.com/in/cameronengineer/"]}
 
     def write(path, text):
         destination = output / path
         destination.parent.mkdir(parents=True, exist_ok=True)
         destination.write_text(text, encoding="utf-8")
 
-    def page(url, title, description, content, article=False, image_url=None, noindex=False):
+    def page(url, title, description, content, article=False, image_url=None, noindex=False,
+             nodes=None, canonical_path=None, article_meta=""):
+        canonical = base_url + (canonical_path or url)
+        sharing_image = f'<meta property="og:image" content="{escape(image_url, quote=True)}"><meta name="twitter:image" content="{escape(image_url, quote=True)}">' if image_url else ""
+        page_node = {"@type": "CollectionPage", "@id": canonical + "#webpage", "url": canonical,
+                     "name": title, "description": description, "isPartOf": {"@id": website["@id"]}}
         write(url.lstrip("/") + "index.html", template.substitute(
-            title=escape(title + " · Cameron's notes", quote=True),
-            description=escape(description, quote=True), canonical=escape(base_url + url, quote=True),
+            title=escape(title if url == "/" else title + " · Cameron's notes", quote=True),
+            description=escape(description, quote=True), canonical=escape(canonical, quote=True),
             og_type="article" if article else "website", content=content,
             topic_navigation=topic_navigation,
-            robots_meta='<meta name="robots" content="noindex">' if noindex else "",
-            social_image=f'<meta property="og:image" content="{escape(image_url, quote=True)}">' if image_url else ""))
-        if not noindex:
+            robots_meta='<meta name="robots" content="noindex">' if noindex else '<meta name="robots" content="max-image-preview:large">',
+            social_image=sharing_image, twitter_card="summary_large_image" if image_url else "summary",
+            article_meta=article_meta,
+            structured_data="" if noindex else json_ld([website, author] + (nodes if nodes is not None else [page_node]))))
+        if not noindex and canonical_path in (None, url):
             pages.append(url)
 
     topic_counts = Counter(t for p in posts for t in p.tags)
     search = '''<div class="search" data-search hidden><label for="note-search">Find a note</label><input id="note-search" type="search" placeholder="A word or topic…" autocomplete="off" aria-controls="note-results"></div>'''
     home = f'''<section class="notebook" id="notebook" aria-labelledby="notebook-title"><div class="section-head"><h1 id="notebook-title">Notes</h1>{search}</div>
       <div id="note-results">{note_list(posts, latest=True)}</div><p class="search-status" data-search-status role="status">{len(posts)} notes · Most recent first</p></section>'''
-    page("/", "The notebook", DESCRIPTION, home)
+    page("/", "Cameron Mitchell’s blog | Engineering, languages & adventure", DESCRIPTION, home)
     page("/posts/", "All notes", DESCRIPTION,
          '<div class="topic-head"><p class="eyebrow">The notebook</p><h1>All notes.</h1><p>Most recent first. Follow a curiosity.</p></div><section class="notebook">' + note_list(posts) + '</section>')
     for p in all_posts:
@@ -151,22 +204,43 @@ def build(output: Path, base_url: str):
             cover = f'''<figure class="article-cover"><a href="{escape(str(c['src']), quote=True)}"><img src="{escape(str(c['src']), quote=True)}" srcset="{escape(c.get('srcset', ''), quote=True)}" sizes="(max-width: 1144px) calc(100vw - 64px), 1080px" width="{int(c['width'])}" height="{int(c['height'])}" alt="{escape(c['alt'], quote=True)}" fetchpriority="high" decoding="async"></a><figcaption>{escape(c.get('caption', ''))}</figcaption></figure>'''
         toc = f'<details class="contents" open><summary>In this note</summary>{p.toc}</details>' if p.toc else ''
         category = next((TOPICS[t] for t in TOPICS if t in p.tags), "Notes")
+        category_tag = next((t for t in TOPICS if t in p.tags and t in topic_counts), None)
+        category_link = f'<a href="{tag_url(category_tag)}">{escape(category)}</a>' if category_tag else escape(category)
         modified = f'<span>Updated {date_label(p.updated)}</span>' if p.updated != p.date else ''
-        content = f'''<div class="breadcrumb"><a href="/">The notebook</a> <span aria-hidden="true"> / </span> {escape(category)}</div>
+        related = sorted((q for q in posts if q.slug != p.slug and set(q.tags) & set(p.tags)),
+                         key=lambda q: (-len(set(q.tags) & set(p.tags)), -q.date.toordinal()))[:3]
+        related_html = '<aside class="related-notes" aria-labelledby="related-title"><h2 id="related-title">Related notes</h2><ul>' + ''.join(f'<li><a href="{q.url}">{escape(q.title)}</a></li>' for q in related) + '</ul></aside>' if related else ''
+        content = f'''<nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">Notes</a> <span aria-hidden="true"> / </span> {category_link}</nav>
           <article><header class="article-head"><p class="eyebrow">{escape(category)}</p><h1>{escape(p.title)}</h1>
-          <p class="dek">{escape(p.description)}</p><div class="article-meta"><span>Cameron Mitchell</span><time datetime="{p.date}">{date_label(p.date)}</time><span>{p.minutes} min read</span>{modified}</div>{tag_links(p.tags, linked=not p.draft)}</header>
-          {cover}<div class="article-layout"><div class="prose">{p.body}<div class="article-end"><a href="/#notebook">← Back to the notebook</a></div></div>{toc}</div></article>'''
+          <p class="dek">{escape(p.description)}</p><div class="article-meta"><a href="https://cameronengineer.com/" rel="author">Cameron Mitchell</a><time datetime="{p.date}">{date_label(p.date)}</time><span>{p.minutes} min read</span>{modified}</div>{tag_links(p.tags, linked=not p.draft)}</header>
+          {cover}<div class="article-layout"><div class="prose">{p.body}<div class="article-end">{related_html}<a href="/#notebook">← Back to the notes</a></div></div>{toc}</div></article>'''
+        images = post_images(p, base_url)
+        article_node = {"@type": "BlogPosting", "@id": base_url + p.url + "#article", "url": base_url + p.url,
+                        "mainEntityOfPage": {"@type": "WebPage", "@id": base_url + p.url},
+                        "headline": p.title, "description": p.description, "datePublished": str(p.date),
+                        "dateModified": str(p.updated), "author": {"@id": author["@id"]},
+                        "isPartOf": {"@id": website["@id"]}, "inLanguage": "en-AU", "articleSection": category}
+        if images:
+            article_node["image"] = images
+        crumbs = [{"@type": "ListItem", "position": 1, "name": "Notes", "item": base_url + "/"}]
+        if category_tag:
+            crumbs.append({"@type": "ListItem", "position": 2, "name": category, "item": base_url + tag_url(category_tag)})
+        crumbs.append({"@type": "ListItem", "position": len(crumbs) + 1, "name": p.title, "item": base_url + p.url})
+        breadcrumb_node = {"@type": "BreadcrumbList", "itemListElement": crumbs}
+        article_meta = f'<meta property="article:published_time" content="{p.date}"><meta property="article:modified_time" content="{p.updated}"><meta name="author" content="Cameron Mitchell">'
         page(p.url, p.title, p.description, content, article=True,
-             image_url=base_url + p.url + p.cover['src'] if p.cover else None, noindex=p.draft)
+             image_url=images[0] if images else None, noindex=p.draft,
+             nodes=[article_node, breadcrumb_node], article_meta=article_meta)
     topic_items = ''.join(f'<li><a href="{tag_url(t)}">{escape(t.capitalize())} <span class="count">{topic_counts[t]:02}</span></a></li>' for t in sorted(topic_counts))
     page("/tags/", "Topics", "Browse the notebook by topic.", f'<div class="topic-head"><p class="eyebrow">The notebook</p><h1>Follow a topic.</h1><ul class="topic-list">{topic_items}</ul></div>')
     for tag in sorted(topic_counts):
         selected = [p for p in posts if tag in p.tags]
-        page(tag_url(tag), tag.capitalize(), f"Notes about {tag} by Cameron Mitchell.",
-             f'<div class="breadcrumb"><a href="/">The notebook</a> / <a href="/tags/">Topics</a></div><div class="topic-head"><p class="eyebrow">Filed under</p><h1>{escape(tag.capitalize())}.</h1><p>{len(selected)} {"note" if len(selected) == 1 else "notes"} from the notebook.</p></div><section class="notebook">{note_list(selected)}</section>')
-    page("/categories/", "Topics", "Browse the notebook by topic.", f'<div class="topic-head"><h1>Follow a topic.</h1><ul class="topic-list">{topic_items}</ul></div>')
+        description = TOPIC_DESCRIPTIONS.get(tag, f"{tag.capitalize()} articles by Cameron Mitchell: practical notes, projects and observations.")
+        page(tag_url(tag), tag.capitalize() + " notes and articles", description,
+             f'<div class="breadcrumb"><a href="/">Notes</a> / <a href="/tags/">Topics</a></div><div class="topic-head"><p class="eyebrow">Filed under</p><h1>{escape(tag.capitalize())}.</h1><p>{escape(description)}</p></div><section class="notebook">{note_list(selected)}</section>')
+    page("/categories/", "Topics", "Browse the notebook by topic.", f'<div class="topic-head"><h1>Follow a topic.</h1><ul class="topic-list">{topic_items}</ul></div>', canonical_path="/tags/")
     error = template.substitute(title="Page not found · Cameron's notes", description="This page isn't in the notebook.",
-         canonical=base_url + '/404.html', og_type="website", topic_navigation=topic_navigation, social_image="", robots_meta='<meta name="robots" content="noindex">', content='<div class="topic-head"><p class="eyebrow">404 · A wrong turn</p><h1>Not in this notebook.</h1><p>This page may have moved, or the address may be mistyped.</p><p><a href="/">Back to the notebook →</a></p></div>')
+         canonical=base_url + '/404.html', og_type="website", topic_navigation=topic_navigation, social_image="", robots_meta='<meta name="robots" content="noindex">', twitter_card="summary", article_meta="", structured_data="", content='<div class="topic-head"><p class="eyebrow">404 · A wrong turn</p><h1>Not in this notebook.</h1><p>This page may have moved, or the address may be mistyped.</p><p><a href="/">Back to the notebook →</a></p></div>')
     write("404.html", error)
     # Preserve Hugo's first-page aliases as normal HTML redirects.
     for alias, target in (("page/1/index.html", "/"), ("posts/page/1/index.html", "/posts/")):
@@ -188,6 +262,8 @@ def build(output: Path, base_url: str):
     feed(posts, "posts/index.xml")
     for tag in topic_counts:
         feed([p for p in posts if tag in p.tags], tag_url(tag).lstrip("/") + "index.xml")
+    image_namespace = "http://www.google.com/schemas/sitemap-image/1.1"
+    ET.register_namespace("image", image_namespace)
     sitemap = ET.Element("urlset", xmlns="http://www.sitemaps.org/schemas/sitemap/0.9")
     for url in pages:
         item = ET.SubElement(sitemap, "url")
@@ -195,6 +271,9 @@ def build(output: Path, base_url: str):
         post = next((p for p in posts if p.url == url), None)
         if post:
             ET.SubElement(item, "lastmod").text = str(post.updated)
+            for image in images_by_url[url]:
+                image_item = ET.SubElement(item, f"{{{image_namespace}}}image")
+                ET.SubElement(image_item, f"{{{image_namespace}}}loc").text = image
     write("sitemap.xml", ET.tostring(sitemap, encoding="unicode", xml_declaration=True))
     write("robots.txt", f"User-agent: *\nAllow: /\nSitemap: {base_url}/sitemap.xml\n")
     print(f"Built {len(posts)} published posts, {len(all_posts) - len(posts)} unlisted drafts and {len(pages)} indexed pages → {output}")

@@ -235,15 +235,17 @@ p {
   display:block;
   margin-bottom:12px;
 }
-.note h3 {
+.note h2 {
+  font-size:27px;
+  letter-spacing:-.4px;
   margin:0 0 12px;
   max-width:680px;
 }
-.note h3 a {
+.note h2 a {
   color:var(--ink);
   text-decoration:none;
 }
-.note h3 a:hover {
+.note h2 a:hover {
   text-decoration:underline;
 }
 .note p {
@@ -601,7 +603,7 @@ tbody tr:last-child td {
   .note-meta .eyebrow {
     margin:0;
   }
-  .note h3 {
+  .note h2 {
     font-size:25px;
   }
   .note .arrow {
@@ -738,4 +740,18 @@ tbody tr:last-child td {
 .trip-grid:has(> .trip-item:only-child) {
   grid-template-columns:minmax(0,1fr);
   max-width:440px;
+}
+
+.breadcrumb {
+  display:block;
+}
+.related-notes {
+  margin-bottom:30px;
+}
+.prose .related-notes h2 {
+  font-size:24px;
+  margin:0 0 14px;
+}
+.related-notes ul {
+  padding-left:20px;
 }

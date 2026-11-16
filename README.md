@@ -95,3 +95,26 @@ pillow-heif, fitdecode, ffmpeg, and macOS `avconvert` for tone-mapping HDR clips
 It exports responsive WebP photographs, H.264/AAC MP4 clips with fast-start,
 posters and thumbnails. Originals stay outside the repository. Live Photo motion
 companions are not duplicated as separate videos.
+
+## Search metadata
+
+Published pages have canonical URLs and social sharing metadata. Posts also
+include `BlogPosting` and breadcrumb structured data using the title,
+description, author, dates and real article images. The homepage identifies the
+website and author. Related notes are selected from published posts with shared
+tags; drafts are never suggested or included in structured data or the sitemap.
+
+The sitemap at `/sitemap.xml` includes article images. The legacy `/categories/`
+page points its canonical URL to `/tags/` and is omitted from the sitemap.
+Standalone map embeds use `noindex`; the trip reports containing them remain
+indexable. Published pages allow large image previews in search results.
+
+Write a specific `title` and `description` in each post's front matter, give
+images useful alt text, and update `lastmod` when making substantive changes.
+Dates in metadata come from the post rather than being reset on every build.
+Existing post URLs remain stable when titles change.
+
+After verifying ownership in Google Search Console, submit
+`https://blog.cameronengineer.com/sitemap.xml` and use URL Inspection to check the
+published articles. On-site metadata does not submit the site to Search Console
+or establish account ownership automatically.

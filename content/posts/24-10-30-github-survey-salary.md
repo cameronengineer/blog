@@ -1,12 +1,12 @@
 ---
-title: What technology skills result in the highest compensation for developers?
-description: Analysis of 2024 Stack Overflow Developer Survey data.
+title: 'Developer salaries and tech skills: Stack Overflow Survey 2024'
+description: An analysis of the 2024 Stack Overflow Developer Survey comparing tech skills and developer pay in the US, UK, Germany and Australia.
 tldr: Learn Cloud, Kuberneties and AWS skills.
 draft: false
 date: 2024-10-30
 lastmod: 2024-10-30
 tags:
-  - engineering
+- engineering
 toc: true
 ---
 
@@ -45,7 +45,7 @@ After filtering, the countries with the most respondents were the USA, Germany a
 
 Of the 213 factors investigated, only a small subset where statistically significant. The below diagram shows these factors sorted in order of strength of correlation (r). P-values, shown in red are also displayed, and it can be seen that the majority of factors has P-values below 0.05 (red dashed line). 
 
-![](factors_and_p_value.png)
+![Correlation coefficients and p-values for factors associated with developer compensation](factors_and_p_value.png)
 
 Its also important to note that many factors were only statistically significant in a particular region. The smaller datasets, especially Australia, had fewer statistically significant correlations than the US.
 

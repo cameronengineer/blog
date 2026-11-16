@@ -1,13 +1,13 @@
 ---
-title: "Italian Flashcards for Anki"
-description: "The Italian vocabulary and verb decks I made for my own study, with pictures, recordings and examples from films."
+title: 'Italian Anki flashcards: free vocabulary and verb decks'
+description: 'Free Italian Anki flashcards with pictures and audio: everyday vocabulary, CILS levels, numbers, verb forms and examples from Italian films.'
 draft: false
 date: 2026-11-15
 lastmod: 2026-11-15
 tags:
-  - italian
-  - languages
-  - anki
+- italian
+- languages
+- anki
 ---
 
 I've been making Anki flashcards for learning Italian, and I've put them on a [small website](https://italianflashcards.cameronengineer.com/) so other people can download them too.

@@ -1,13 +1,12 @@
 ---
-title: "The Most Common Words in Dreaming Spanish's Super Beginner Videos"
-description: "A frequency analysis of the most common words in the Dreaming Spanish Super Beginner series, revealing that stop words are the most frequently used."
+title: 'Dreaming Spanish Super Beginner: the 300 most common words'
+description: A frequency analysis of Dreaming Spanish Super Beginner videos, with the 300 most common Spanish words and counts for supplemental vocabulary study.
 draft: false
 date: 2025-08-16
 lastmod: 2025-08-16
 tags:
-  - spanish
-  - languages
-# toc: true
+- spanish
+- languages
 ---
 
 Dreaming Spanish is a video platform that provides comprehensible input videos for spanish language learners. The core principle is that language acquisition through massive exposure to content can teach you a language in the same way we learnt your native language. [This method is detailed on their website, and it actively discourages rote memorization](https://www.dreamingspanish.com/method).

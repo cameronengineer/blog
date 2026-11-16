@@ -1,12 +1,12 @@
 ---
-title: Approach Procedures At Moorabbin Airport YMMB
-description: Notes About Landing At Moorabbin Airport
+title: 'Moorabbin Airport (YMMB): approach and reporting-point notes'
+description: Personal flying notes on Moorabbin Airport (YMMB), including GMH and Carrum reporting points, radio calls and an interactive map.
 tldr: Dont use flying information from some guy online. Talk to an instructor.
 draft: false
 date: 2025-06-21
 lastmod: 2025-06-21
 tags:
-  - flying
+- flying
 toc: true
 ---
 
@@ -18,7 +18,7 @@ toc: true
 
 ## Reporting Points
 
-![](Carrum+GMH.png)
+![Carrum and GMH reporting points near Moorabbin Airport](Carrum+GMH.png)
 
 ### Finding GMH
 
